@@ -6,6 +6,10 @@ import { useEffect, useState } from 'react';
 import { List, Pill, ChevronRight } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
 
+//testing supabase
+import { createClient } from '@supabase/supabase-js';
+import { Database, Tables, Enums } from '../../supabase';
+
 export default function Home() {
   const colorScheme = useColorScheme();
   const currentTheme = colorScheme == 'light' ? Colors.light : Colors.dark
@@ -35,6 +39,25 @@ export default function Home() {
       setCurrMedsButtonTheme(Colors.dark);
     }
   }
+
+  const supabase = createClient<Database>(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!
+  )
+
+  let drug_product: Tables<'drug_product'>;
+
+  const a = async () => {
+    const {error} = await supabase
+    .from('drug_product')
+    .insert({id: 2049, class_name: "Human", din: '00326925', brand_name: "SINEQUAN", descriptor: "", number_of_ais: 1, ai_group_no: '0107703005', company_name: "AA PHARMA INC", last_update_date: "2024-02-06"})
+    .select();
+    console.log(error);
+  }
+
+  a();
+  
+
 
   const items = [
     {
