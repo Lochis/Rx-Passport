@@ -5,10 +5,8 @@ import { View, ScrollView, Text, Separator, YGroup, ListItem, XGroup, Button } f
 import { useEffect, useState } from 'react';
 import { List, Pill, ChevronRight } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
-
-//testing supabase
-import { createClient } from '@supabase/supabase-js';
-import { Database, Tables, Enums } from '../../supabase';
+import { Int32 } from 'react-native/Libraries/Types/CodegenTypes';
+import { getDPD } from '../api/CanadaDPD';
 
 export default function Home() {
   const colorScheme = useColorScheme();
@@ -40,25 +38,10 @@ export default function Home() {
     }
   }
 
-  const supabase = createClient<Database>(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_ANON_KEY!
-  )
 
-  let drug_product: Tables<'drug_product'>;
-
-  const a = async () => {
-    const {error} = await supabase
-    .from('drug_product')
-    .insert({id: 2049, class_name: "Human", din: '00326925', brand_name: "SINEQUAN", descriptor: "", number_of_ais: 1, ai_group_no: '0107703005', company_name: "AA PHARMA INC", last_update_date: "2024-02-06"})
-    .select();
-    console.log(error);
-  }
-
-  a();
+  // gets updated information from Canada DPD
+  //getDPD();
   
-
-
   const items = [
     {
       title: 'Bubonic Plague Antidote',
@@ -115,11 +98,17 @@ export default function Home() {
     },
   ]
   
+interface item {
+  title: string,
+  subTitle: string,
+  inner: string,
+}
 
-  const DrugItems = ({ items }) => {
+
+  const DrugItems = ({items}) => {
     return (
       <>
-        {items.map((item, index) => (
+        {items.map((item: item, index:Int32) => (
           <YGroup.Item key={index}>
             <Link asChild href={{
               pathname: "/modal",
@@ -129,7 +118,7 @@ export default function Home() {
                 icon={<Pill />}
                 title={item.title}
                 subTitle={item.subTitle}
-                iconAfter={<ChevronRight />}
+                iconAfter={<ChevronRight />} 
               >
                 {item.inner}
               </ListItem>

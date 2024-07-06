@@ -9,13 +9,37 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      CanadaDPD: {
+        Row: {
+          active_ingredient: Json | null
+          created_at: string
+          drug_product: Json | null
+          id: number
+          route_admin: Json | null
+        }
+        Insert: {
+          active_ingredient?: Json | null
+          created_at?: string
+          drug_product?: Json | null
+          id?: number
+          route_admin?: Json | null
+        }
+        Update: {
+          active_ingredient?: Json | null
+          created_at?: string
+          drug_product?: Json | null
+          id?: number
+          route_admin?: Json | null
+        }
+        Relationships: []
+      }
       drug_product: {
         Row: {
           ai_group_no: string | null
           brand_name: string | null
           class_name: string
           company_name: string | null
-          description: string | null
+          descriptor: string | null
           din: string | null
           id: number
           last_update_date: string | null
@@ -26,7 +50,7 @@ export type Database = {
           brand_name?: string | null
           class_name: string
           company_name?: string | null
-          description?: string | null
+          descriptor?: string | null
           din?: string | null
           id?: number
           last_update_date?: string | null
@@ -37,11 +61,29 @@ export type Database = {
           brand_name?: string | null
           class_name?: string
           company_name?: string | null
-          description?: string | null
+          descriptor?: string | null
           din?: string | null
           id?: number
           last_update_date?: string | null
           number_of_ais?: number | null
+        }
+        Relationships: []
+      }
+      testing: {
+        Row: {
+          created_at: string
+          drug_product: Json | null
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          drug_product?: Json | null
+          id?: number
+        }
+        Update: {
+          created_at?: string
+          drug_product?: Json | null
+          id?: number
         }
         Relationships: []
       }
