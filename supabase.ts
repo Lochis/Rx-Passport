@@ -11,25 +11,25 @@ export type Database = {
     Tables: {
       CanadaDPD: {
         Row: {
-          active_ingredient: Json | null
+          active_ingredient: Json
           created_at: string
-          drug_product: Json | null
+          drug_product: Json
           id: number
-          route_admin: Json | null
+          route_admin: Json
         }
         Insert: {
-          active_ingredient?: Json | null
+          active_ingredient: Json
           created_at?: string
-          drug_product?: Json | null
+          drug_product: Json
           id?: number
-          route_admin?: Json | null
+          route_admin: Json
         }
         Update: {
-          active_ingredient?: Json | null
+          active_ingredient?: Json
           created_at?: string
-          drug_product?: Json | null
+          drug_product?: Json
           id?: number
-          route_admin?: Json | null
+          route_admin?: Json
         }
         Relationships: []
       }

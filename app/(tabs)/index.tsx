@@ -1,51 +1,83 @@
 import { StyleSheet, useColorScheme, Modal, Pressable } from 'react-native';
 import Colors from '@/constants/Colors';
-import EditScreenInfo from '@/app/_components/EditScreenInfo';
-import { View, ScrollView, Text, Separator, YGroup, ListItem, XGroup, Button } from 'tamagui';
+import EditScreenInfo from '@/app/_components/old/EditScreenInfo';
+import {View, ScrollView, Text, Separator, YGroup, ListItem, XGroup, Button, ThemeName, Theme } from 'tamagui';
 import { useEffect, useState } from 'react';
 import { Pill, PlusCircle, ChevronRight } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
-import { getDPD } from '../api/CanadaDPD';
+import { CanadaDPD } from '../api/CanadaDPD';
+import { allDPD } from '../api/allDPD';
 
 export default function Home() {
-  const colorScheme = useColorScheme();
-  const currentTheme = colorScheme == 'light' ? Colors.light : Colors.dark
   const [variant, setVariant] = useState<'outlined' | undefined>(undefined);
   const [btn1Theme, setBtn1Theme] = useState<'active' | undefined>('active');
   const [variant2, setVariant2] = useState<'outlined' | undefined>('outlined');
   const [btn2Theme, setBtn2Theme] = useState<'active' | undefined>(undefined);
 
-  const [currMedsButtonTheme, setCurrMedsButtonTheme] = useState(Colors.light);
-  const [historyButtonTheme, setHistoryButtonTheme] = useState(Colors.dark);
+  interface ButtonProps {
+    currMeds: {
+      theme: ThemeName | null | undefined;
+      variant: 'outlined' | undefined;
+      color: string | undefined;
+    },
+    history: {
+      theme: ThemeName | null | undefined;
+      variant: 'outlined' | undefined;
+      color: string | undefined;
+    },
+  }
+
+  const [buttonStates, setButtonStates] = useState<ButtonProps>({
+    currMeds: {
+      theme: 'active',
+      variant: undefined,
+      color: Colors.light.text
+    },
+    history: {
+      theme: undefined,
+      variant: 'outlined',
+      color: Colors.dark.text
+    }
+  });
 
   const handleCurrMedsPress = () => {
-    if (variant === 'outlined') {
-      setBtn1Theme('active');
-      setVariant(undefined);
-      setCurrMedsButtonTheme(Colors.light);
-
-      setBtn2Theme(undefined);
-      setVariant2('outlined');
-      setHistoryButtonTheme(Colors.dark)
+    if (buttonStates.currMeds.variant === 'outlined') {
+      setButtonStates({
+        currMeds: {
+          theme: 'active',
+          variant: undefined,
+          color: Colors.light.text
+        },
+        history: {
+          theme: undefined,
+          variant: 'outlined',
+          color: Colors.light.text
+        }
+      });
     }
   }
-
+  
   const handleHistoryPress = () => {
-    if (variant2 === 'outlined') {
-      setBtn2Theme('active');
-      setVariant2(undefined);
-      setHistoryButtonTheme(Colors.light);
-
-
-      setVariant('outlined');
-      setBtn1Theme('active');
-      setCurrMedsButtonTheme(Colors.dark);
+    if (buttonStates.history.variant === 'outlined') {
+      setButtonStates({
+        currMeds: {
+          theme: undefined,
+          variant: 'outlined',
+          color: Colors.light.text
+        },
+        history: {
+          theme: 'active',
+          variant: undefined,
+          color: Colors.light.text
+        }
+      });
     }
   }
-
+  // gets DPD from supabase
+  //allDPD();
 
   // gets updated information from Canada DPD
-  //getDPD();
+  //CanadaDPD();
 
   const testItems: item[] = [
     {
@@ -114,6 +146,7 @@ export default function Home() {
     return (
       <>
         {items.map((item: item, index: number) => (
+          <Theme name="surface4">
           <YGroup.Item key={index}>
             <Link asChild href={{
               pathname: "/modal",
@@ -129,43 +162,46 @@ export default function Home() {
               </ListItem>
             </Link>
           </YGroup.Item>
+          </Theme>
         ))}
       </>
     );
   };
 
   return (
-    <div>
-      <View flex={1}>
-        <YGroup>
-          <XGroup width='100%'>
-            <Button flex={1} color={currMedsButtonTheme.text} onPress={handleCurrMedsPress} theme={btn1Theme} variant={variant}>Current Meds</Button>
-            <Button flex={1} color={historyButtonTheme.text} onPress={handleHistoryPress} theme={btn2Theme} variant={variant2} >History</Button>
+      <View flex={1} paddingHorizontal={'$2'} paddingTop={'$2'}>
+        <YGroup flexGrow={1}>
+          <XGroup width='100%' alignSelf='center'>
+            <Button flex={1} onPress={handleCurrMedsPress} theme={buttonStates.currMeds.theme} variant={buttonStates.currMeds.variant}>Current Meds</Button>
+            <Button flex={1} onPress={handleHistoryPress} theme={buttonStates.history.theme} variant={buttonStates.history.variant}>History</Button>
           </XGroup>
-          <ScrollView flex={1} paddingTop={10}>
-            <YGroup separator={<Separator />} gap={2} flex={1} paddingHorizontal={20} alignItems='center'>
-              { }
-              <DrugItems items={variant2 == undefined ? historicItems : testItems} />
+          <ScrollView minHeight={'100vh'} paddingTop={10}>
+          
+            <YGroup gap={2} flex={1} alignItems='center'>
+            
+              <DrugItems items={buttonStates.history.variant == 'outlined' ? historicItems : testItems} />
+              
             </YGroup>
+            
           </ScrollView>
+         
         </YGroup>
-      </View>
-      <div>
+      
             <Link asChild 
             style={{position: 'absolute', zIndex: 10, right: 50, bottom: 50}}
             href={{
               pathname: "/AddDrugModal",
-              /*params: { type: 'addDrug'  }*/
+              params: { }
             }}>
               <Pressable>
                 {({ pressed }) => (
-                  <PlusCircle size={50} color={Colors[colorScheme ?? 'light'].text}
+                  <PlusCircle size={50}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }} />
                 )}
               </Pressable>
             </Link>
-          </div>
-    </div>
+            </View>
+          
   );
 }
 

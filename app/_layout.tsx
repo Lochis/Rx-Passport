@@ -1,18 +1,16 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { useState } from 'react';
-import { useColorScheme } from '@/app/_components/useColorScheme';
-import { View } from '@tamagui/core';
+import { Theme, View } from '@tamagui/core';
 import { TamaguiProvider } from '@tamagui/core';
 import appConfig from '@/tamagui.config';
 import { supabase } from './utils/supabase';
-
-import Auth from './_components/EmailAuth';
+import Auth from './EmailAuth';
 import { Session } from '@supabase/supabase-js';
 
 export {
@@ -53,8 +51,8 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
   const [session, setSession] = useState<Session | null>(null)
+  const { title } = useLocalSearchParams();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -68,19 +66,21 @@ function RootLayoutNav() {
 
   return (
     <TamaguiProvider config={appConfig}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-
-        {session && session.user ? (
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-          </Stack>
-        ) : (
-          <View flex={1}>
-            <Auth />
-          </View>
-        )}
-
+      <ThemeProvider value={DefaultTheme/*DefaultTheme*/}>
+        
+          {session && session.user ? (
+            <Theme name="pink">
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+              <Stack.Screen name="AddDrugModal" options={{ presentation: 'modal', title: 'Add Drug' }} />
+            </Stack>
+            </Theme>
+          ) : (
+            <Theme name="pink">
+              <Auth />
+            </Theme>
+          )}
       </ThemeProvider>
     </TamaguiProvider>
   );

@@ -4,7 +4,7 @@ import { Link, Tabs, Stack} from 'expo-router';
 import { Pressable } from 'react-native';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/app/_components/useColorScheme';
-import { useClientOnlyValue } from '@/app/_components/useClientOnlyValue';
+import { useClientOnlyValue } from '@/app/_components/old/useClientOnlyValue';
 import appConfig from '@/tamagui.config';
 import {Pill, Sun, UserRound} from '@tamagui/lucide-icons';
 
@@ -17,12 +17,10 @@ function TabBarIcon(props: {
 }
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { createClient } from '@supabase/supabase-js';
 import { Database, Tables, Enums } from '../../supabase';
 
-export async function getDPD() {
+export async function CanadaDPD() {
 
     const supabase = createClient<Database>(
         process.env.EXPO_PUBLIC_SUPABASE_URL!,//process.env.SUPABASE_URL!,

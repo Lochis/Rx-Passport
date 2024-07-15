@@ -1,23 +1,16 @@
 import { StyleSheet, Pressable, useColorScheme } from 'react-native';
 import React, { useState } from 'react';
-import EditScreenInfo from '@/app/_components/EditScreenInfo';
-import { Text, View } from '@/app/_components/Themed';
+import EditScreenInfo from '@/app/_components/old/EditScreenInfo';
+import { Text } from '@/app/_components/Themed';
 import { Sun, Moon } from '@tamagui/lucide-icons';
-import { Button, XStack, YStack } from 'tamagui';
+import { Button, XStack, YStack, View, Theme, H1 } from 'tamagui';
 import { supabase } from '../utils/supabase';
 
 export default function You() {
   const [loading, setLoading] = useState(false)
-  let colorScheme = useColorScheme();
   const [native, setNative] = React.useState(false);
 
-  const onColorChange = () => {
-    if (colorScheme == "dark"){
-      colorScheme = "light";
-    } else if (colorScheme == "light"){
-      colorScheme = "dark";
-    }
-  }
+
 
   async function signOut() {
     setLoading(true)
@@ -30,12 +23,11 @@ export default function You() {
     <View style={styles.container}>
        <Pressable>
               {({pressed}) => (
-                <Sun size={25} onPress={onColorChange} color={colorScheme == "light" ? 'rgba(255,255,255,0.1)' : '#eee'} />
+                <Sun size={25} />
               )}
             </Pressable>
-      <Text style={styles.title}>You</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-     
+      <H1>You</H1>
+      <View style={styles.separator} />
       <EditScreenInfo path="app/(tabs)/settings.tsx" />
       <Button onPress={() => signOut()}>Sign Out</Button>
     </View>
