@@ -1,27 +1,30 @@
-import { StyleSheet, useColorScheme, Modal } from 'react-native';
+import { StyleSheet, useColorScheme, Modal, Pressable } from 'react-native';
 import Colors from '@/constants/Colors';
-import EditScreenInfo from '@/components/EditScreenInfo';
+import EditScreenInfo from '@/app/_components/EditScreenInfo';
 import { View, ScrollView, Text, Separator, YGroup, ListItem, XGroup, Button } from 'tamagui';
 import { useEffect, useState } from 'react';
-import { List, Pill, ChevronRight } from '@tamagui/lucide-icons';
+import { Pill, PlusCircle, ChevronRight } from '@tamagui/lucide-icons';
 import { Link } from 'expo-router';
-import { Int32 } from 'react-native/Libraries/Types/CodegenTypes';
 import { getDPD } from '../api/CanadaDPD';
 
 export default function Home() {
   const colorScheme = useColorScheme();
   const currentTheme = colorScheme == 'light' ? Colors.light : Colors.dark
-  const [variant, setVariant] = useState<'outlined' | 'active' | undefined>('active');
-  const [variant2, setVariant2] = useState<'active' | 'outlined' | undefined>('outlined');
+  const [variant, setVariant] = useState<'outlined' | undefined>(undefined);
+  const [btn1Theme, setBtn1Theme] = useState<'active' | undefined>('active');
+  const [variant2, setVariant2] = useState<'outlined' | undefined>('outlined');
+  const [btn2Theme, setBtn2Theme] = useState<'active' | undefined>(undefined);
 
   const [currMedsButtonTheme, setCurrMedsButtonTheme] = useState(Colors.light);
   const [historyButtonTheme, setHistoryButtonTheme] = useState(Colors.dark);
 
   const handleCurrMedsPress = () => {
     if (variant === 'outlined') {
-      setVariant('active');
+      setBtn1Theme('active');
+      setVariant(undefined);
       setCurrMedsButtonTheme(Colors.light);
 
+      setBtn2Theme(undefined);
       setVariant2('outlined');
       setHistoryButtonTheme(Colors.dark)
     }
@@ -29,11 +32,13 @@ export default function Home() {
 
   const handleHistoryPress = () => {
     if (variant2 === 'outlined') {
-      setVariant2('active');
+      setBtn2Theme('active');
+      setVariant2(undefined);
       setHistoryButtonTheme(Colors.light);
 
 
       setVariant('outlined');
+      setBtn1Theme('active');
       setCurrMedsButtonTheme(Colors.dark);
     }
   }
@@ -41,8 +46,8 @@ export default function Home() {
 
   // gets updated information from Canada DPD
   //getDPD();
-  
-  const items = [
+
+  const testItems: item[] = [
     {
       title: 'Bubonic Plague Antidote',
       subTitle: 'idk cures bubonic plague i guess',
@@ -70,7 +75,7 @@ export default function Home() {
     },
   ]
 
-  const historicItems = [
+  const historicItems: item[] = [
     {
       title: 'historic drug',
       subTitle: 'historical boobonis',
@@ -97,18 +102,18 @@ export default function Home() {
       inner: 'chicken wings',
     },
   ]
-  
-interface item {
-  title: string,
-  subTitle: string,
-  inner: string,
-}
+
+  interface item {
+    title: string,
+    subTitle: string,
+    inner: string,
+  }
 
 
-  const DrugItems = ({items}) => {
+  const DrugItems = ({ items }) => {
     return (
       <>
-        {items.map((item: item, index:Int32) => (
+        {items.map((item: item, index: number) => (
           <YGroup.Item key={index}>
             <Link asChild href={{
               pathname: "/modal",
@@ -118,7 +123,7 @@ interface item {
                 icon={<Pill />}
                 title={item.title}
                 subTitle={item.subTitle}
-                iconAfter={<ChevronRight />} 
+                iconAfter={<ChevronRight />}
               >
                 {item.inner}
               </ListItem>
@@ -130,19 +135,37 @@ interface item {
   };
 
   return (
-    <View flex={1}>
-      {/*<H3 color={currentTheme.text}>Rx Passport</H3>*/}
-      <XGroup width='100%'>
-        <Button flex={1} color={currMedsButtonTheme.text} onPress={handleCurrMedsPress} variant={variant}>Current Meds</Button>
-        <Button flex={1} color={historyButtonTheme.text} onPress={handleHistoryPress} variant={variant2} >History</Button>
-      </XGroup>
-      <ScrollView flex={1} paddingTop={10}>
-        <YGroup separator={<Separator />} gap={2} flex={1} paddingHorizontal={20} alignItems='center'>
-          {}
-        <DrugItems items={variant2 == 'active' ? historicItems : items} />
+    <div>
+      <View flex={1}>
+        <YGroup>
+          <XGroup width='100%'>
+            <Button flex={1} color={currMedsButtonTheme.text} onPress={handleCurrMedsPress} theme={btn1Theme} variant={variant}>Current Meds</Button>
+            <Button flex={1} color={historyButtonTheme.text} onPress={handleHistoryPress} theme={btn2Theme} variant={variant2} >History</Button>
+          </XGroup>
+          <ScrollView flex={1} paddingTop={10}>
+            <YGroup separator={<Separator />} gap={2} flex={1} paddingHorizontal={20} alignItems='center'>
+              { }
+              <DrugItems items={variant2 == undefined ? historicItems : testItems} />
+            </YGroup>
+          </ScrollView>
         </YGroup>
-      </ScrollView>
-    </View>
+      </View>
+      <div>
+            <Link asChild 
+            style={{position: 'absolute', zIndex: 10, right: 50, bottom: 50}}
+            href={{
+              pathname: "/AddDrugModal",
+              /*params: { type: 'addDrug'  }*/
+            }}>
+              <Pressable>
+                {({ pressed }) => (
+                  <PlusCircle size={50} color={Colors[colorScheme ?? 'light'].text}
+                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }} />
+                )}
+              </Pressable>
+            </Link>
+          </div>
+    </div>
   );
 }
 

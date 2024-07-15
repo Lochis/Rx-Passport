@@ -1,11 +1,15 @@
 import { StyleSheet, Pressable, useColorScheme } from 'react-native';
-import Colors from '@/constants/Colors';
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+import React, { useState } from 'react';
+import EditScreenInfo from '@/app/_components/EditScreenInfo';
+import { Text, View } from '@/app/_components/Themed';
 import { Sun, Moon } from '@tamagui/lucide-icons';
+import { Button, XStack, YStack } from 'tamagui';
+import { supabase } from '../utils/supabase';
 
-export default function TabTwoScreen() {
+export default function You() {
+  const [loading, setLoading] = useState(false)
   let colorScheme = useColorScheme();
+  const [native, setNative] = React.useState(false);
 
   const onColorChange = () => {
     if (colorScheme == "dark"){
@@ -15,6 +19,13 @@ export default function TabTwoScreen() {
     }
   }
 
+  async function signOut() {
+    setLoading(true)
+    const { error } = await supabase.auth.signOut()
+    if (error) console.error("Sign out error: " + error);
+    setLoading(false)
+}
+
   return (
     <View style={styles.container}>
        <Pressable>
@@ -22,11 +33,11 @@ export default function TabTwoScreen() {
                 <Sun size={25} onPress={onColorChange} color={colorScheme == "light" ? 'rgba(255,255,255,0.1)' : '#eee'} />
               )}
             </Pressable>
-      <Text style={styles.title}>Tab Two</Text>
+      <Text style={styles.title}>You</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
      
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
-      
+      <EditScreenInfo path="app/(tabs)/settings.tsx" />
+      <Button onPress={() => signOut()}>Sign Out</Button>
     </View>
   );
 }

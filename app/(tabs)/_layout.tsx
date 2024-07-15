@@ -2,13 +2,11 @@ import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs, Stack} from 'expo-router';
 import { Pressable } from 'react-native';
-
 import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
+import { useColorScheme } from '@/app/_components/useColorScheme';
+import { useClientOnlyValue } from '@/app/_components/useClientOnlyValue';
 import appConfig from '@/tamagui.config';
 import {Pill, Sun, UserRound} from '@tamagui/lucide-icons';
-import { View } from 'tamagui';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -36,20 +34,15 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <Pill size={25} color={color}/>,
           headerRight: () => (
             <>
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <Pill size={25} color={Colors[colorScheme ?? 'light'].text}
-                  style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}/>
-                )}
-              </Pressable>
-            </Link>
+           
+            {/* used to be where pill icon was */}
+
             </>
           ),
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="you"
         options={{
           title: 'You',
           tabBarIcon: ({ color }) => <UserRound size={25} color={color}/>,

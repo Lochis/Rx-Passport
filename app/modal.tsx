@@ -3,7 +3,7 @@ import { Platform, StyleSheet, useColorScheme } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import Colors from '@/constants/Colors';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
+import EditScreenInfo from '@/app/_components/EditScreenInfo';
 import {Text, View, H1, H3, H5} from 'tamagui';
 
 export default function ModalScreen() {
